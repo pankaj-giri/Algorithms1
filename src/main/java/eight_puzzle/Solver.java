@@ -1,10 +1,11 @@
 package eight_puzzle;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import In;
-import StdOut;
+import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
