@@ -1,5 +1,4 @@
 
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,7 +46,7 @@ public class Solver {
 				}
 				break;
 			} else {
-				for ( Board Board2D : node.Board2D.neighbors() ) {
+				for (Board Board2D : node.Board2D.neighbors()) {
 					if ((node.previousSearchNode == null) || !Board2D.equals(node.previousSearchNode.Board2D)) {
 						SearchNode n1 = new SearchNode(node.numOfMoves + 1, Board2D, node);
 						queue.insert(n1);
@@ -58,29 +57,6 @@ public class Solver {
 		}
 
 		return Board2Ds;
-	}
-
-	public static void main(String[] args) {
-		// create initial Board2D from file
-		In in = new In(args[0]);
-		int N = in.readInt();
-		int[][] blocks = new int[N][N];
-		for ( int i = 0; i < N; i++ )
-			for ( int j = 0; j < N; j++ )
-				blocks[i][j] = in.readInt();
-		Board initial = new Board(blocks);
-
-		// solve the puzzle
-		Solver solver = new Solver(initial);
-
-		// print solution to standard output
-		if (!solver.isSolvable())
-			StdOut.println("No solution possible");
-		else {
-			StdOut.println("Minimum number of moves = " + solver.moves());
-			for ( Board Board2D : solver.solution() )
-				StdOut.println(Board2D);
-		}
 	}
 
 	private class SearchNode implements Comparable<SearchNode> {
@@ -100,12 +76,35 @@ public class Solver {
 
 		@Override
 		public int compareTo(SearchNode o) {
-			int compare = Integer.valueOf(Board2D.manhattan() + numOfMoves).compareTo(
-					Integer.valueOf(o.Board2D.manhattan() + o.numOfMoves));
+			int compare = Integer.valueOf(Board2D.manhattan() + numOfMoves)
+					.compareTo(Integer.valueOf(o.Board2D.manhattan() + o.numOfMoves));
 			if (compare == 0) {
 				return Integer.valueOf(Board2D.hamming()).compareTo(o.Board2D.hamming());
 			}
 			return compare;
+		}
+	}
+
+	public static void main(String[] args) {
+		// create initial Board2D from file
+		In in = new In(args[0]);
+		int N = in.readInt();
+		int[][] blocks = new int[N][N];
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < N; j++)
+				blocks[i][j] = in.readInt();
+		Board initial = new Board(blocks);
+
+		// solve the puzzle
+		Solver solver = new Solver(initial);
+
+		// print solution to standard output
+		if (!solver.isSolvable())
+			StdOut.println("No solution possible");
+		else {
+			StdOut.println("Minimum number of moves = " + solver.moves());
+			for (Board Board2D : solver.solution())
+				StdOut.println(Board2D);
 		}
 	}
 }
