@@ -1,3 +1,4 @@
+package eight_puzzle;
 
 
 import java.util.ArrayList;
