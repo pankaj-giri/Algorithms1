@@ -28,6 +28,7 @@ public class Solver {
 		return board2Ds.size();
 	}
 
+	//LIFO based - more natural fit to the problem
 	private Stack<Board> board2Ds = new Stack<Board>();
 
 	// sequence of Board2Ds in a shortest solution; null if unsolvable
