@@ -1,7 +1,6 @@
 package eight_puzzle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Stack;
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
@@ -24,17 +23,17 @@ public class Solver {
 
 	// min number of moves to solve initial Board2D; -1 if unsolvable
 	public int moves() {
-		Board2Ds.clear();
+		board2Ds.clear();
 		solution();
-		return Board2Ds.size();
+		return board2Ds.size();
 	}
 
-	private List<Board> Board2Ds = new ArrayList<Board>();
+	private Stack<Board> board2Ds = new Stack<Board>();
 
 	// sequence of Board2Ds in a shortest solution; null if unsolvable
 	public Iterable<Board> solution() {
-		if (!Board2Ds.isEmpty())
-			return Board2Ds;
+		if (!board2Ds.isEmpty())
+			return board2Ds;
 
 		if (queue.isEmpty()) {
 			queue.insert(new SearchNode(0, initial, null));
@@ -42,18 +41,17 @@ public class Solver {
 
 		while (true) {
 			SearchNode node = queue.delMin();
-			if (node.Board2D.isGoal()) {
+			if (node.board2d.isGoal()) {
 				SearchNode prev = node;
-				// while (!prev.Board2D.equals(initial)) {
 				while (prev.previousSearchNode != null) {
-					Board2Ds.add(prev.Board2D);
+					board2Ds.add(prev.board2d);
 					prev = prev.previousSearchNode;
 				}
 				break;
 			} else {
-				for (Board Board2D : node.Board2D.neighbors()) {
-					if ((node.previousSearchNode == null) || !Board2D.equals(node.previousSearchNode.Board2D)) {
-						SearchNode n1 = new SearchNode(node.numOfMoves + 1, Board2D, node);
+				for (Board board2D : node.board2d.neighbors()) {
+					if ((node.previousSearchNode == null) || !board2D.equals(node.previousSearchNode.board2d)) {
+						SearchNode n1 = new SearchNode(node.numOfMoves + 1, board2D, node);
 						queue.insert(n1);
 					}
 				}
@@ -61,30 +59,40 @@ public class Solver {
 			}
 		}
 
-		return Board2Ds;
+		return board2Ds;
+	}
+	
+	public void printSolution() {
+		if(board2Ds.isEmpty()) {
+			System.out.println("Nothing to print");
+			return;
+		}
+		while(!board2Ds.isEmpty()) {
+			StdOut.println(board2Ds.pop());
+		}
 	}
 
 	private class SearchNode implements Comparable<SearchNode> {
 		int numOfMoves = 0;
-		public Board Board2D;
+		private Board board2d;
 		SearchNode previousSearchNode;
 
 		public boolean equals(Object node) {
-			return Board2D.equals(((SearchNode) node).Board2D);
+			return board2d.equals(((SearchNode) node).board2d);
 		}
 
 		SearchNode(int n, Board b, SearchNode node) {
 			this.numOfMoves = n;
-			this.Board2D = b;
+			this.board2d = b;
 			this.previousSearchNode = node;
 		}
 
 		@Override
 		public int compareTo(SearchNode o) {
-			int compare = Integer.valueOf(Board2D.manhattan() + numOfMoves)
-					.compareTo(Integer.valueOf(o.Board2D.manhattan() + o.numOfMoves));
+			int compare = Integer.valueOf(board2d.manhattan() + numOfMoves)
+					.compareTo(Integer.valueOf(o.board2d.manhattan() + o.numOfMoves));
 			if (compare == 0) {
-				return Integer.valueOf(Board2D.hamming()).compareTo(o.Board2D.hamming());
+				return Integer.valueOf(board2d.hamming()).compareTo(o.board2d.hamming());
 			}
 			return compare;
 		}
@@ -108,8 +116,7 @@ public class Solver {
 			StdOut.println("No solution possible");
 		else {
 			StdOut.println("Minimum number of moves = " + solver.moves());
-			for (Board Board2D : solver.solution())
-				StdOut.println(Board2D);
+			solver.printSolution();
 		}
 	}
 }
