@@ -19,5 +19,3 @@ The problem. The 8-puzzle is a sliding puzzle that is played on a 3-by-3 grid wi
 
 The code models the 3x3 board using a 2 dimensional array, and uses Hamming and Manhattan's distance to check how close it is to the final solution, and uses a priority queue to decide what move should be made next.
 
-# Collinear
-
